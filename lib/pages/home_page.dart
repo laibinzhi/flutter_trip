@@ -6,6 +6,7 @@ import 'package:flutter_trip/model/grid_nav_model.dart';
 import 'package:flutter_trip/model/home_model.dart';
 import 'package:flutter_trip/widget/grid_nav.dart';
 import 'package:flutter_trip/widget/local_nav.dart';
+import 'package:flutter_trip/widget/sub_nav.dart';
 
 const APPBAR_SCROLL_OFFSET = 100; //滚动的最大距离
 
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage> {
   String resultString = '';
 
   List<CommonModel> localNavList = [];
+
+  List<CommonModel> subNavList = [];
 
   GridNavModel gridNavModel;
 
@@ -64,7 +67,8 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         localNavList = model.localNavList;
         gridNavModel = model.gridNav;
-        print('gridNavModel'+gridNavModel.flight.endColor);
+        subNavList = model.subNavList;
+        print('gridNavModel' + gridNavModel.flight.endColor);
       });
     } catch (e) {
       print(e.toString());
@@ -112,6 +116,12 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.fromLTRB(7, 0, 7, 4),
                     child: GridNav(
                       gridNavModel: gridNavModel,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(7, 0, 7, 4),
+                    child: SubNav(
+                      subNavList: subNavList,
                     ),
                   ),
                   Container(
