@@ -6,6 +6,7 @@ import 'package:flutter_trip/model/grid_nav_model.dart';
 import 'package:flutter_trip/model/home_model.dart';
 import 'package:flutter_trip/model/sales_box_model.dart';
 import 'package:flutter_trip/widget/grid_nav.dart';
+import 'package:flutter_trip/widget/loading_container.dart';
 import 'package:flutter_trip/widget/local_nav.dart';
 import 'package:flutter_trip/widget/sales_box.dart';
 import 'package:flutter_trip/widget/sub_nav.dart';
@@ -41,6 +42,8 @@ class _HomePageState extends State<HomePage> {
 
   SalesBoxModel salesBoxModel;
 
+  bool _loading = true;
+
   @override
   void initState() {
     super.initState();
@@ -73,9 +76,13 @@ class _HomePageState extends State<HomePage> {
         gridNavModel = model.gridNav;
         subNavList = model.subNavList;
         salesBoxModel = model.salesBox;
+        _loading = false;
       });
     } catch (e) {
       print(e.toString());
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -83,80 +90,82 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xfff2f2f2),
-      body: Stack(
-        children: [
-          MediaQuery.removePadding(
-            removeTop: true,
-            context: context,
-            child: NotificationListener(
-              onNotification: (scrollNotification) {
-                if (scrollNotification is ScrollUpdateNotification &&
-                    scrollNotification.depth == 0) {
-                  //滚动切实列表滚动的时候
-                  _onScroll(scrollNotification.metrics.pixels);
-                }
-              },
-              child: ListView(
-                children: [
-                  Container(
-                    height: 160,
-                    child: Swiper(
-                      autoplay: true,
-                      pagination: SwiperPagination(),
-                      itemCount: _imageUrls.length,
-                      itemBuilder: (context, index) {
-                        return Image.network(
-                          _imageUrls[index],
-                          fit: BoxFit.fill,
-                        );
-                      },
-                    ),
+      body: LoadingContainer(
+          isLoading: _loading,
+          child: Stack(
+            children: [
+              MediaQuery.removePadding(
+                removeTop: true,
+                context: context,
+                child: NotificationListener(
+                  onNotification: (scrollNotification) {
+                    if (scrollNotification is ScrollUpdateNotification &&
+                        scrollNotification.depth == 0) {
+                      //滚动切实列表滚动的时候
+                      _onScroll(scrollNotification.metrics.pixels);
+                    }
+                  },
+                  child: ListView(
+                    children: [
+                      Container(
+                        height: 160,
+                        child: Swiper(
+                          autoplay: true,
+                          pagination: SwiperPagination(),
+                          itemCount: _imageUrls.length,
+                          itemBuilder: (context, index) {
+                            return Image.network(
+                              _imageUrls[index],
+                              fit: BoxFit.fill,
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(7, 4, 7, 4),
+                        child: LocalNav(
+                          localNavList: localNavList,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(7, 0, 7, 4),
+                        child: GridNav(
+                          gridNavModel: gridNavModel,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(7, 0, 7, 4),
+                        child: SubNav(
+                          subNavList: subNavList,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(7, 0, 7, 4),
+                        child: SalesBox(
+                          salesBoxModel: salesBoxModel,
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(7, 4, 7, 4),
-                    child: LocalNav(
-                      localNavList: localNavList,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(7, 0, 7, 4),
-                    child: GridNav(
-                      gridNavModel: gridNavModel,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(7, 0, 7, 4),
-                    child: SubNav(
-                      subNavList: subNavList,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(7, 0, 7, 4),
-                    child: SalesBox(
-                      salesBoxModel: salesBoxModel,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Opacity(
-            opacity: appBarAlpha,
-            child: Container(
-              height: 80,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text('首页'),
                 ),
               ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-            ),
-          )
-        ],
-      ),
+              Opacity(
+                opacity: appBarAlpha,
+                child: Container(
+                  height: 80,
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text('首页'),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            ],
+          )),
     );
   }
 }
