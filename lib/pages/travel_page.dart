@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_trip/dao/travel_tab_dao.dart';
 import 'package:flutter_trip/model/travel_tab_model.dart';
 import 'package:flutter_trip/pages/travel_tab_page.dart';
+import 'package:underline_indicator/underline_indicator.dart';
 
 class TravelPage extends StatefulWidget {
   TravelPage({Key key}) : super(key: key);
@@ -54,7 +55,8 @@ class _TravelPageState extends State<TravelPage> with TickerProviderStateMixin {
               }).toList(),
               labelColor: Colors.black,
               labelPadding: EdgeInsets.fromLTRB(20, 0, 10, 5),
-              indicator: UnderlineTabIndicator(
+              indicator: UnderlineIndicator(
+                  strokeCap: StrokeCap.round,
                   borderSide: BorderSide(
                     width: 3,
                     color: Color(0xff2fcfbb),
