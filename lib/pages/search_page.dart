@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_trip/dao/search_dao.dart';
 import 'package:flutter_trip/model/search_model.dart';
+import 'package:flutter_trip/util/navigator_util.dart';
 import 'package:flutter_trip/widget/search_bar.dart';
 import 'package:flutter_trip/widget/webview.dart';
 
@@ -99,12 +100,12 @@ class _SearchPageState extends State<SearchPage> {
     SearchItem item = searchModel.data[position];
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return WebView(
-            url: item.url,
-            title: '详情',
-          );
-        }));
+        NavigatorUtil.push(
+            context,
+            WebView(
+              url: item.url,
+              title: '详情',
+            ));
       },
       child: Container(
         padding: EdgeInsets.all(10),
@@ -169,7 +170,9 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  _jumpToSpeak() {}
+  _jumpToSpeak() {
+    NavigatorUtil.push(context, SearchPage());
+  }
 
   _typeImage(String type) {
     if (type == null) return 'images/type_travelgroup.png';
