@@ -23,12 +23,12 @@ var Params = {
 
 class TravelDao {
   static Future<TravelItemModel> fetch(
-      String url,Map params, String groupChannelCode, int pageIndex, int pageSize) async {
-    Map paramsMap = params['pagePara'];
+      String url, String groupChannelCode, int pageIndex, int pageSize) async {
+    Map paramsMap = Params['pagePara'];
     paramsMap['pageIndex'] = pageIndex;
     paramsMap['pageSize'] = pageSize;
-    params['groupChannelCode'] = groupChannelCode;
-    final response = await http.post(url, body: jsonEncode(params));
+    Params['groupChannelCode'] = groupChannelCode;
+    final response = await http.post(url, body: jsonEncode(Params));
     if (response.statusCode == 200) {
       Utf8Decoder utf8decoder = Utf8Decoder(); // fix 中文乱码
       var result = json.decode(utf8decoder.convert(response.bodyBytes));
